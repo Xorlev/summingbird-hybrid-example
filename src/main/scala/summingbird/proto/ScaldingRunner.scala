@@ -76,7 +76,7 @@ object ScaldingRunner {
     * but just using Memcache here for simplicity.
     */
   val servingStore =
-    MemcacheStore.typed[Long, (BatchID, Long)](MemcacheStore.defaultClient("memcached", "localhost:11211"), "scaldingLookCount")
+    MemcacheStore.typed[Long, (BatchID, Long)](MemcacheStore.defaultClient("memcached", MemcachedConnect), "scaldingLookCount")
 
   val mode = Hdfs(false, new Configuration())
 

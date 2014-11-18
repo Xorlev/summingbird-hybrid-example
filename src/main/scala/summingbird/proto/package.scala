@@ -8,10 +8,14 @@ package object proto {
 
   val random = new scala.util.Random
 
+  val AppName = "summingbird-proto"
+
   val JobDir = "/tmp/summingbird-proto/"
   val DataDir = JobDir + "data/"
 
-  val KafkaZkConnectionString = "localhost:2181/kafka"
+  val MemcachedConnect = "localhost:49153"
+  val KafkaZkConnect = "localhost:49154"
+  val KafkaBrokerConnect = "localhost:49155"
   val KafkaTopic = "summingbird.proto.productview"
 
   val MaxId = 10

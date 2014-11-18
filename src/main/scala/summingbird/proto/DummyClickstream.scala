@@ -14,7 +14,7 @@ object DummyClickstream {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   val props = new Properties()
-  props.put("metadata.broker.list", "localhost:9092")
+  props.put("metadata.broker.list", KafkaBrokerConnect)
   props.setProperty("key.serializer.class", classOf[StringEncoder].getName)
 
   lazy val producer = new Producer[String, Array[Byte]](new ProducerConfig(props))

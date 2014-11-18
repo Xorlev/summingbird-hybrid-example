@@ -20,7 +20,7 @@ object Ingestion {
   val RESTART_CONSUMER_PERIOD_MS = 60000L
 
   val props = new Properties()
-  props.put("zookeeper.connect", KafkaZkConnectionString)
+  props.put("zookeeper.connect", KafkaZkConnect)
   props.put("group.id", "summingbird-prototype-ingestion")
   props.put("zookeeper.session.timeout.ms", "400");
   props.put("zookeeper.sync.time.ms", "200");

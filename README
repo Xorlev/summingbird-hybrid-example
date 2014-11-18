@@ -5,9 +5,24 @@ approach.
 PREREQUISITES
 -------------
 
-You need to have memcached, zookeeper, and kafka installed and running
-on your machine on the usual ports.
+You need to have [Docker](https://www.docker.com/) and [Fig](http://www.fig.sh/) installed
+so that you can launch memcache, zookeeper and kafka. Modify fig.yml and change the 
+KAFKA_ADVERTISED_HOST_NAME to your IP address and run:
+  fig up -d
 
+Make sure all 3 initialized corectly
+  fig ps
+
+Example output from fig:
+                Name                              Command               State                      Ports                    
+---------------------------------------------------------------------------------------------------------------------------
+summingbirdhybridexample_kafka_1       /bin/sh -c start-kafka.sh        Up      0.0.0.0:49155->9092/tcp                     
+summingbirdhybridexample_memcached_1   memcached                        Up      0.0.0.0:49153->11211/tcp                    
+summingbirdhybridexample_zookeeper_1   /opt/zookeeper-3.4.5/bin/z ...   Up      0.0.0.0:49154->2181/tcp, 2888/tcp, 3888/tcp 
+
+This example also relies on a patched version of Tormenta which can be found [here](https://github.com/upio/tormenta.git). 
+Check this package out and publish it to your local maven repository:
+  sbt publishM2
 
 RUNNING
 ---------------------------------

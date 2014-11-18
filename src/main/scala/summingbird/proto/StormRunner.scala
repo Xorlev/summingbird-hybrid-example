@@ -24,6 +24,7 @@ import com.twitter.summingbird.storm.option.{FlatMapParallelism, SummerParalleli
 import backtype.storm.{Config => BTConfig}
 import com.twitter.scalding.Args
 import com.twitter.storehaus.memcache.MemcacheStore
+import com.twitter.tormenta.scheme.Scheme
 import com.twitter.tormenta.spout.KafkaSpout
 import com.twitter.util.Await
 
@@ -48,16 +49,26 @@ object StormRunner {
     */
   import Serialization._, ViewCount._
 
+
+  val scheme = new Scheme[ProductViewed] {
+    override def decode(bytes: Array[Byte]): TraversableOnce[ProductViewed] =
+      Some(parseView(bytes))
+  }
+
   /**
-    * "spout" is a concrete Storm source for Status data. This will
-    * act as the initial producer of Status instances in the
-    * Summingbird word count job.
-    */
+   * "spout" is a concrete Storm source for Status data. This will
+   * act as the initial producer of Status instances in the
+   * Summingbird word count job.
+   */
   val spout = new KafkaSpout(
-    KafkaZkConnectionString,
+    scheme,
+    KafkaZkConnect,
+    "/brokers",
     KafkaTopic,
-    "summingbird-prototype-storm"
-  )(bytes => Some(parseView(bytes)))
+    AppName,
+    "/consumers",
+    -1
+  )
 
   /**
     * And here's our MergeableStore supplier.
@@ -79,7 +90,7 @@ object StormRunner {
     * First, the backing store:
     */
   lazy val viewCountStore =
-    MemcacheStore.mergeable[(Long, BatchID), Long](MemcacheStore.defaultClient("memcached", "localhost:11211"), "stormLookCount")
+    MemcacheStore.mergeable[(Long, BatchID), Long](MemcacheStore.defaultClient("memcached", MemcachedConnect), "stormLookCount")
 
   /**
     * the param to store is by name, so this is still not created created
@@ -112,7 +123,7 @@ object StormRunner {
       override def getNamedOptions: Map[String, Options] = Map(
         "DEFAULT" -> Options().set(SummerParallelism(2))
                       .set(FlatMapParallelism(80))
-                      .set(SpoutParallelism(16))
+                      .set(SpoutParallelism(2))
                       .set(CacheSize(100))
       )
       override def graph = viewCount[Storm](spout, storeSupplier)

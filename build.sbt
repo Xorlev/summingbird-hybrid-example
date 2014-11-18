@@ -2,7 +2,7 @@ name := "summingbird-proto"
 
 version := "0.0.1"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
 
 scalacOptions ++= Seq(
   "-unchecked",
@@ -12,8 +12,8 @@ scalacOptions ++= Seq(
 
 val bijectionVersion = "0.6.2"
 val storehausVersion = "0.9.0"
-val tormentaVersion = "0.7.0"
-val summingbirdVersion = "0.4.1"
+val tormentaVersion = "0.8.0"
+val summingbirdVersion = "0.4.2"
 val slf4jVersion = "1.6.6"
 
 libraryDependencies ++= Seq(
@@ -27,12 +27,11 @@ libraryDependencies ++= Seq(
   "com.twitter" %% "summingbird-storm" % summingbirdVersion,
   "com.twitter" %% "summingbird-scalding" % summingbirdVersion,
   "com.twitter" %% "summingbird-client" % summingbirdVersion,
-  "org.apache.storm" % "storm-core" % "0.9.1-incubating",
-  // only works with kafta 0.7; implemented our own spout instead
-  //"com.twitter" %% "tormenta-kafka" % tormentaVersion,
+  "org.apache.storm" % "storm-core" % "0.9.2-incubating",
+  "com.twitter" %% "tormenta-kafka-08" % tormentaVersion,
   "com.twitter" %% "tormenta-core" % tormentaVersion,
   // sigh... https://issues.apache.org/jira/browse/KAFKA-974
-  "org.apache.kafka" %% "kafka" % "0.8.0"
+  "org.apache.kafka" %% "kafka" % "0.8.1"
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")
     exclude("com.sun.jmx", "jmxri")
@@ -41,6 +40,7 @@ libraryDependencies ++= Seq(
 resolvers ++= Seq(
   Opts.resolver.sonatypeSnapshots,
   Opts.resolver.sonatypeReleases,
+  Resolver.mavenLocal, // We need this for the tormenta-kafka-08 local artifact
   "Clojars Repository" at "http://clojars.org/repo",
   "Conjars Repository" at "http://conjars.org/repo",
   "Twitter Maven" at "http://maven.twttr.com"
